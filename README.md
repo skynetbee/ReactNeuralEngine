@@ -7,7 +7,7 @@ This repository contains a React-based project ready for deployment using XAMPP'
 ## 📦 Download the Release
 
 1. Go to the [Releases](https://github.com/skynetbee/ReactNeuralEngine/releases/download/13June2025/devenv.zip) section of this repository.
-2. Download the latest `.zip` file (e.g., `react-app-release.zip`).
+2. Download the latest `.zip` file (e.g., `devenv.zip`).
 
 ---
 
