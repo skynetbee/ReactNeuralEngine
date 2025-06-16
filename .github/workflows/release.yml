@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      run: npm test -- --coverage --watchAll=false
+    
+    - name: Build for production
+      run: npm run build
+    
+    - name: Create deployment package
+      run: |
+        cd build
+        zip -r ../react-neural-engine-${{ github.ref_name }}.zip .
+        cd ..
+        tar -czf react-neural-engine-${{ github.ref_name }}.tar.gz -C build .
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        if [ -f CHANGELOG.md ]; then
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          sed -n '/^## \[/,/^## \[/{ /^## \[/{ N; }; /^## \[/!p; }' CHANGELOG.md | head -n -1 >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        else
+          echo "CHANGELOG=Release ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          ## 🚀 Release ${{ github.ref_name }}
+          
+          ### 📋 Changes
+          ${{ steps.changelog.outputs.CHANGELOG }}
+          
+          ### 📦 Downloads
+          - **ZIP Package**: `react-neural-engine-${{ github.ref_name }}.zip`
+          - **TAR.GZ Package**: `react-neural-engine-${{ github.ref_name }}.tar.gz`
+          
+          ### 🚀 Deployment
+          1. Download one of the packages above
+          2. Extract to your web server or XAMPP htdocs
+          3. Navigate to the application URL
+          
+          ### 📖 Documentation
+          Visit our [documentation site](https://skynetbee.github.io/ReactNeuralEngine/) for detailed setup instructions.
+        draft: false
+        prerelease: false
+    
+    - name: Upload ZIP Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./react-neural-engine-${{ github.ref_name }}.zip
+        asset_name: react-neural-engine-${{ github.ref_name }}.zip
+        asset_content_type: application/zip
+    
+    - name: Upload TAR.GZ Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./react-neural-engine-${{ github.ref_name }}.tar.gz
+        asset_name: react-neural-engine-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip
+
