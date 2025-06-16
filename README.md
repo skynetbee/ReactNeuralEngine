@@ -20,35 +20,10 @@ A modern React-based neural engine application with flexible deployment options,
 
 ## 🚀 Quick Start
 
-### Development Environment
-
-1. **Prerequisites**:
-   - Node.js (>= 14.0.0)
-   - npm (>= 6.0.0)
-   - Git
-
-2. **Clone and Setup**:
-   ```bash
-   git clone https://github.com/skynetbee/ReactNeuralEngine.git
-   cd ReactNeuralEngine
-   npm install
-   ```
-
-3. **Start Development Server**:
-   ```bash
-   npm start
-   ```
-   Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-4. **Build for Production**:
-   ```bash
-   npm run build
-   ```
-
 ### XAMPP Deployment (Quick Testing)
 
 1. **Download the Release**:
-   - Go to the [Releases](https://github.com/skynetbee/ReactNeuralEngine/releases) section
+   - Go to the [Releases](https://github.com/skynetbee/ReactNeuralEngine/releases/download/14June2025/devenv.zip) section
    - Download the latest production build ZIP file
 
 2. **Prerequisites**:
